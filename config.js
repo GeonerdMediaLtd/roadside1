@@ -8,7 +8,7 @@
 //
 // Leave it empty ("") and each player is asked for their own token.
 window.ROADSIDE_CONFIG = {
-  mapillaryToken: "",
+  mapillaryToken: "MLY|29442208448743495|6ba76c52ed320a48b20f0c2283ebd096",
   roundsPerGame: 5,
   // OpenStreetMap tiles for the guess map. Swap for another provider if your traffic grows.
   tileUrl: "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
