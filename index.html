@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Roadside: Guess the Road</title>
+<meta name="description" content="A free, open-source GeoGuessr-style game. Walk real streets with Mapillary imagery and guess where in the world you are.">
+<meta name="theme-color" content="#1747a6">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Overpass:wght@400;600;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css" integrity="sha384-sHL9NAb7lN7rfvG5lfHpm643Xkcjzp4jFvuavGOndn6pjVqS6ny56CAt3nsEVT4H" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/mapillary-js@4.1.2/dist/mapillary.css" integrity="sha384-IamMZxz60pSNzUk3cW2nl3uYUdpiDoQpLJrBoAAezEE+QaOYCVA9rfi/8Cx0x15T" crossorigin="anonymous">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main id="game" hidden>
+  <div id="viewer" aria-label="Street-level view. Drag to look around; use the arrows to move."></div>
+  <header class="hud">
+    <div class="logo"><img src="icon.svg" alt="" width="26" height="26">Roadside</div>
+    <div class="chips">
+      <span id="hudRound">Round 1/5</span>
+      <span id="hudScore">0</span>
+      <span id="hudTimer" hidden>1:00</span>
+    </div>
+  </header>
+  <div class="tools">
+    <button type="button" class="ghost" id="btnStart" title="Return to where you started">Back to start</button>
+    <button type="button" class="ghost" id="btnQuit">Quit</button>
+  </div>
+  <section class="mapbox" id="mapbox" aria-label="Guess map">
+    <div class="maphead"><span id="mapMsg">Tap the map to drop your pin</span><button type="button" class="ghost small" id="btnMapClose">Close map</button></div>
+    <div id="gmap"></div>
+    <div class="mapfoot"><button type="button" class="btn" id="btnGuess" disabled>Guess</button></div>
+  </section>
+  <button type="button" class="btn fab" id="btnMapOpen">Map</button>
+  <div class="loader" id="loader"><div class="spin"></div><p id="loaderMsg">Finding a road…</p></div>
+</main>
+
+<section class="screen" id="result" hidden>
+  <div id="rmap"></div>
+  <div class="card rcard">
+    <div class="rrow"><div class="big" id="rDist"></div><div class="pts" id="rPts"></div></div>
+    <div class="meter"><i id="rMeter"></i></div>
+    <p class="place" id="rPlace"></p>
+    <p class="muted" id="rCredit"></p>
+    <p class="links" id="rLinks"></p>
+    <button type="button" class="btn wide" id="btnNext">Next round</button>
+  </div>
+</section>
+
+<section class="screen home" id="home">
+  <div class="wrap">
+    <div class="logo lg"><img src="icon.svg" alt="" width="34" height="34">Roadside</div>
+    <h1>Where on Earth is this road?</h1>
+    <p class="lead">Five real streets, anywhere in the world. Look around, walk down the road, read the signs, then drop a pin. Closer guesses score up to 5,000 points.</p>
+    <div class="modes" role="radiogroup" aria-label="Game mode">
+      <button type="button" class="mode on" data-mode="classic" role="radio" aria-checked="true"><b>Classic</b><span>Look around and walk</span></button>
+      <button type="button" class="mode" data-mode="nomove" role="radio" aria-checked="false"><b>No moving</b><span>Look around only</span></button>
+      <button type="button" class="mode" data-mode="daily" role="radio" aria-checked="false"><b>Daily</b><span>Same 5 roads for everyone</span></button>
+    </div>
+    <div class="opts">
+      <label>Region
+        <select id="optRegion">
+          <option value="World">Whole world</option>
+          <option>Europe</option><option>Asia</option><option>Africa</option>
+          <option>North America</option><option>South America</option><option>Oceania</option>
+        </select>
+      </label>
+      <label>Timer
+        <select id="optTimer"><option value="0">Off</option><option value="60">60 s per round</option><option value="120">2 min per round</option><option value="300">5 min per round</option></select>
+      </label>
+    </div>
+    <button type="button" class="btn wide big" id="btnPlay">Start driving</button>
+    <p class="muted center" id="homeNote"></p>
+    <details class="settings" id="settings">
+      <summary>Mapillary token</summary>
+      <p class="muted">Roadside uses free street-level imagery from <a href="https://www.mapillary.com">Mapillary</a>. Paste a client token (it starts with <code>MLY|</code>). It is saved only in this browser.</p>
+      <div class="tokrow"><input id="tok" type="password" autocomplete="off" spellcheck="false" placeholder="MLY|..." aria-label="Mapillary client token"><button type="button" class="btn" id="btnTok">Save</button></div>
+      <p class="muted" id="tokMsg"></p>
+    </details>
+    <p class="foot muted">Imagery © Mapillary contributors (CC BY-SA 4.0) · Map © OpenStreetMap contributors · <a href="https://github.com/GeonerdMediaLtd/roadside" id="srcLink">Source on GitHub</a></p>
+  </div>
+</section>
+
+<section class="screen home" id="end" hidden>
+  <div class="wrap">
+    <div class="logo lg"><img src="icon.svg" alt="" width="34" height="34">Roadside</div>
+    <h1 id="endTitle">Trip complete</h1>
+    <div class="card">
+      <div class="big xl" id="endScore"></div>
+      <p class="rank" id="endRank"></p>
+      <div id="emap"></div>
+      <table id="endTable"></table>
+    </div>
+    <div class="row2"><button type="button" class="btn" id="btnAgain">Play again</button><button type="button" class="ghost dark" id="btnShare">Share score</button></div>
+    <p class="muted center" id="endNote"></p>
+  </div>
+</section>
+
+<script src="config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js" integrity="sha384-cxOPjt7s7Iz04uaHJceBmS+qpjv2JkIHNVcuOrM+YHwZOmJGBXI00mdUXEq65HTH" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/mapillary-js@4.1.2/dist/mapillary.js" integrity="sha384-1AlAxcgdzKreJ5f2K+t7SW3pEE0ek9u3lUwlZXX+v+FtEk1tWSg6DBVLb3ZKhpB+" crossorigin="anonymous"></script>
+<script src="app.js"></script>
+</body>
+</html>
