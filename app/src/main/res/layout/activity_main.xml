@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="20dp">
+
+        <TextView
+            android:id="@+id/status"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#FFF4E5"
+            android:padding="16dp"
+            android:textSize="16sp"
+            android:textColor="#222222" />
+
+        <!-- ───────── Setup ───────── -->
+        <TextView
+            style="@style/SectionTitle"
+            android:text="Setup (one time)" />
+
+        <Button
+            android:id="@+id/btnPhone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="1. Allow call detection" />
+
+        <Button
+            android:id="@+id/btnAccess"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="2. Turn on Auto Speaker in Accessibility" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:textSize="13sp"
+            android:textColor="#666666"
+            android:text="In the list, open Installed apps (or Downloaded apps) → Auto Speaker → turn it on. If Android says &quot;Restricted setting&quot;, tap the button below, open the ⋮ menu at the top right, choose &quot;Allow restricted settings&quot;, then try step 2 again." />
+
+        <Button
+            android:id="@+id/btnAppInfo"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Open App info" />
+
+        <Button
+            android:id="@+id/btnBattery"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="3. Stop battery saver from closing it (recommended)" />
+
+        <!-- ───────── Options ───────── -->
+        <TextView
+            style="@style/SectionTitle"
+            android:text="Options" />
+
+        <Switch
+            android:id="@+id/swEnabled"
+            style="@style/OptionSwitch"
+            android:text="Auto speaker on" />
+
+        <Switch
+            android:id="@+id/swIncoming"
+            style="@style/OptionSwitch"
+            android:text="For incoming calls" />
+
+        <Switch
+            android:id="@+id/swOutgoing"
+            style="@style/OptionSwitch"
+            android:text="For outgoing calls" />
+
+        <Switch
+            android:id="@+id/swHeadset"
+            style="@style/OptionSwitch"
+            android:text="Not when earphones or Bluetooth are connected" />
+
+        <TextView
+            android:id="@+id/delayLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:textSize="16sp"
+            android:textColor="#222222" />
+
+        <SeekBar
+            android:id="@+id/delay"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:max="5" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:textSize="13sp"
+            android:textColor="#666666"
+            android:text="The speaker is switched on once per call. If you switch it off during a call, it stays off. Nothing is recorded, collected or sent anywhere." />
+    </LinearLayout>
+</ScrollView>

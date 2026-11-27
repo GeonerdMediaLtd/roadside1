@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Auto Speaker</string>
+    <string name="service_label">Auto Speaker</string>
+    <string name="service_description">Turns on the phone\'s loudspeaker automatically when a call connects. It only looks at the call screen to press the Speaker button, and only during a call. Nothing is collected or sent anywhere.</string>
+</resources>
